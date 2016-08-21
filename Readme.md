@@ -47,14 +47,16 @@ module.exports = {
             "layerName"
         ],
         "groups": [
-            // ... group HTML ...
+            "<circle cx=\"0\" cy=\"0\" r=\"100\"/>"
+            // ... one SVG snippet per layer ...
         ],
         "styles": [
-            // ... styles to apply to the group ...
+            "fill: #0f0;"
+            // ... one SVG CSS style string per layer ...
         ],
         "center": {
-            "x": 2.4074389687499997,
-            "y": 590.5117750000001
+            "x": 50,
+            "y": 50
         }
     }
 }
