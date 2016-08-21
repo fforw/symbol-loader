@@ -33,13 +33,35 @@ You can define symbol layers by adding another colon separated identifier
 Here, the symbol "name" consist of three different layers, to be drawn in document definition order
 as usual with SVG.
 
-The loader will keep track of transformations on that symbol groups and their parents and
-will adjust the created offsets accordingly. Translation should always work, rotation and
-matrix transforms can cause problems / have to be put at the right level to work. The current
-aproach works, but is somewhat primitive.
+The loader will ignore all transforms outside of the symbol groups and on the group itself. 
 
-The loader allows cleanup of namespaces from vector graphic programs like Inkscape (Advertisment: *use Inkscape, it's awesome*)
+The loader will convert the symbols into a JSON structure which is exported as module export
+in the generated module.
 
+
+```Javascript
+module.exports = {
+    "symbolName": {
+        "name": "symbolName",
+        "layers": [
+            "layerName"
+        ],
+        "groups": [
+            // ... group HTML ...
+        ],
+        "styles": [
+            // ... styles to apply to the group ...
+        ],
+        "center": {
+            "x": 2.4074389687499997,
+            "y": 590.5117750000001
+        }
+    }
+}
+```
+
+The center object contains the center of the calculated bounding box. Paths are linearized to 
+determine a good aproximation of the bounding box. 
 
 # Links
 
