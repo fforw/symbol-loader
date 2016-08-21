@@ -19,7 +19,7 @@ function extractJSONExport(doc)
 }
 
 
-function load(relPath, cb)
+function load(relPath, cb, query)
 {
 
     var cacheableSpy = sinon.spy();
@@ -33,6 +33,7 @@ function load(relPath, cb)
 
         Loader.call({
             cacheable: cacheableSpy,
+            query: query,
             async: function ()
             {
                 return (err, doc) => {
@@ -64,7 +65,7 @@ describe("Symbol loader", function(){
                 done(err);
                 return;
             }
-            console.log(JSON.stringify(data, null, 4));
+            //console.log(JSON.stringify(data, null, 4));
 
             assert(data.foo.name === "foo");
             assert(data.foo.layers.length === 1);
@@ -72,14 +73,37 @@ describe("Symbol loader", function(){
 
             assert(data.foo.groups.length === 1);
             assert(data.foo.groups[0].indexOf('rect') >= 0);
-            assert(data.foo.styles[0] === "fill: #00f;");
+            assert(data.foo.styles[0] === "fill: #00f; fill-opacity: 0.5;");
 
             assert.deepEqual(data.foo.center, { x: 50, y: 50});
 
             done();
         });
-
     });
+
+
+    it("parses styles", function(done)
+    {
+        load("test-documents/test.svg", (err, data) => {
+
+            if (err)
+            {
+                done(err);
+                return;
+            }
+            //console.log(JSON.stringify(data, null, 4));
+
+            assert.deepEqual(
+                data.foo.styles[0],
+                {
+                    fill: "#00f",
+                    fillOpacity: 0.5
+                } );
+
+            done();
+        }, { parseStyle : true});
+    });
+
     it("supports multiple layers", function(done)
     {
         load("test-documents/test2.svg", (err, data) => {
@@ -115,7 +139,7 @@ describe("Symbol loader", function(){
                 done(err);
                 return;
             }
-            console.log(JSON.stringify(data, null, 4));
+            //console.log(JSON.stringify(data, null, 4));
 
             assert(data.qux.layers.length === 1);
             assert(data.qux.layers[0] === "default");
