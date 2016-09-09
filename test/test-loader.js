@@ -65,7 +65,7 @@ describe("Symbol loader", function(){
                 done(err);
                 return;
             }
-            //console.log(JSON.stringify(data, null, 4));
+            console.log(JSON.stringify(data, null, 4));
 
             assert(data.foo.name === "foo");
             assert(data.foo.layers.length === 1);
@@ -75,7 +75,9 @@ describe("Symbol loader", function(){
             assert(data.foo.groups[0].indexOf('rect') >= 0);
             assert(data.foo.styles[0] === "fill: #00f; fill-opacity: 0.5;");
 
-            assert.deepEqual(data.foo.center, { x: 50, y: 50});
+            assert.deepEqual(data.foo.transforms, ["translate(50, 50)"]);
+
+            assert.deepEqual(data.foo.aabb, {minX:50,minY:50,maxX:150,maxY:150});
 
             done();
         });
@@ -101,7 +103,7 @@ describe("Symbol loader", function(){
                 } );
 
             done();
-        }, { parseStyle : true});
+        }, "?{\"parseStyle\":true}");
     });
 
     it("supports multiple layers", function(done)
@@ -123,8 +125,11 @@ describe("Symbol loader", function(){
             assert(data.bar.groups[0].indexOf('rect') >= 0);
             assert(data.bar.groups[1].indexOf('circle') >= 0);
 
-            assert(data.bar.center.x|0 === 0);
-            assert(data.bar.center.y|0 === 70);
+            var aabb = data.bar.aabb;
+            assert((aabb.minX|0) == 129);
+            assert((aabb.minY|0) == 50);
+            assert((aabb.maxX|0) == 270);
+            assert((aabb.maxY|0) == 191);
 
             done();
         });
@@ -144,7 +149,7 @@ describe("Symbol loader", function(){
             assert(data.qux.layers.length === 1);
             assert(data.qux.layers[0] === "default");
 
-            assert(data.qux.center.y > 450);
+            assert((data.qux.aabb.minY + data.qux.aabb.maxY)/2 > 450);
 
             done();
         });
