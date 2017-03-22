@@ -65,7 +65,7 @@ describe("Symbol loader", function(){
                 done(err);
                 return;
             }
-            console.log(JSON.stringify(data, null, 4));
+            //console.log(JSON.stringify(data, null, 4));
 
             assert(data.foo.name === "foo");
             assert(data.foo.layers.length === 1);
@@ -103,7 +103,7 @@ describe("Symbol loader", function(){
                 } );
 
             done();
-        }, "?{\"parseStyle\":true}");
+        }, { parseStyle : true });
     });
 
     it("supports multiple layers", function(done)
